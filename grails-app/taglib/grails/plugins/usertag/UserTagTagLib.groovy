@@ -40,4 +40,25 @@ class UserTagTagLib {
             out << body(map)
         }
     }
+
+    def eachTagged = {attrs, body ->
+        if (!attrs.tag) {
+            throwTagError("Tag [eachTagged] is missing required attribute [tag]")
+        }
+        def clazz = attrs.type ? ((attrs.type instanceof Class) ? attrs.type : userTagService.getDomainClass(attrs.type.toString())) : null
+        def tenant = attrs.tenant ? Long.valueOf(attrs.tenant.toString()) : null
+        def list
+        if(clazz) {
+            list = userTagService.findTagged(clazz, attrs.tag, attrs.username, tenant)
+        } else {
+            list = userTagService.findAllTagged(attrs.tag, attrs.username, tenant)
+        }
+        list.eachWithIndex {s, i ->
+            def map = [(attrs.var ?: 'it'): s]
+            if (attrs.status) {
+                map[attrs.status] = i
+            }
+            out << body(map)
+        }
+    }
 }

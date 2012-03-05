@@ -25,6 +25,8 @@ class UserTagService {
 
     static transactional = true
 
+    def grailsApplication
+
     /**
      * Add a tag to a domain instance.
      * @param domainInstance the instance to tag
@@ -115,14 +117,14 @@ class UserTagService {
     }
 
     /**
-     * Find all domain instances tagged with a specific tag by a specific user.
+     * Find domain instances tagged with a specific tag (optionally by a specific user).
      * @param domainClass the domain class to search and return
      * @param tag tag name
      * @param username username or null for all users
      * @param tenant only used in multi-tenant environment
      * @return list of matched domain instances (in unpredictable order)
      */
-    List findAllTagged(Class domainClass, String tag, String username = null, Long tenant = null) {
+    List findTagged(Class domainClass, String tag, String username = null, Long tenant = null) {
         UserTag.createCriteria().list() {
             projections {
                 distinct('taggedId')
@@ -138,5 +140,56 @@ class UserTagService {
                 eq('taggedValue', tag)
             }
         }.collect {domainClass.get(it)}
+    }
+
+    /**
+     * Find all domain instances tagged with a specific tag (optionally by a specific user).
+     * This method can potentially return all type of domain classes.
+     * @see #findTagged
+     * @param tag tag name
+     * @param username username or null for all users
+     * @param tenant only used in multi-tenant environment
+     * @return list of matched domain instances (sorted by domain class name but instances in unpredictable order)
+     */
+    List findAllTagged(String tag, String username = null, Long tenant = null) {
+        def domainCache = [:]
+        UserTag.createCriteria().list() {
+            projections {
+                distinct(['taggedEntity', 'taggedId'])
+            }
+            if (tenant != null) {
+                eq('tenantId', tenant)
+            }
+            if (username) {
+                eq('username', username)
+            }
+            if (tag) {
+                eq('taggedValue', tag)
+            }
+            order('taggedEntity', 'asc')
+            order('taggedId', 'asc')
+        }.collect {
+            def className = it[0]
+            def domainClass = domainCache[className]
+            if(! domainClass) {
+                domainClass = domainCache[className] = getDomainClass(className)
+            }
+            domainClass.get(it[1])
+        }
+    }
+
+    /**
+     * Find a domain class in application context.
+     *
+     * @param name domain property name i.e. "homeAddress" or class name "com.mycompany.HomeAddress"
+     */
+    protected Class getDomainClass(String name) {
+        def domain = grailsApplication.domainClasses.find {it.propertyName == name}
+        if (domain) {
+            domain = domain.clazz
+        } else {
+            domain = grailsApplication.classLoader.loadClass(name)
+        }
+        return domain
     }
 }

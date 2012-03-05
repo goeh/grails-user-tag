@@ -81,22 +81,55 @@ class UserTagServiceTests extends GroovyTestCase {
 
         m = new TestEntity(name: "Linda Svenson", age: 47).save(failOnError: true, flush: true)
 
-        def result = userTagService.findAllTagged(TestEntity, "friend", "peter")
+        def result = userTagService.findTagged(TestEntity, "friend", "peter")
         assert result.size() == 1
         assert result[0].name == "Joe Average"
 
-        assert userTagService.findAllTagged(TestEntity, "vip", "peter").size() == 0
+        assert userTagService.findTagged(TestEntity, "vip", "peter").size() == 0
 
-        result = userTagService.findAllTagged(TestEntity, "friend", "mary")
+        result = userTagService.findTagged(TestEntity, "friend", "mary")
         assert result.size() == 2
-        assert result.find{it.name == "Joe Average"}
-        assert result.find{it.name == "Liza Average"}
+        assert result.find {it.name == "Joe Average"}
+        assert result.find {it.name == "Liza Average"}
 
-        assert userTagService.findAllTagged(TestEntity, "vip", "mary").size() == 0
+        assert userTagService.findTagged(TestEntity, "vip", "mary").size() == 0
 
-        assert userTagService.findAllTagged(TestEntity, "vip").size() == 1
-        assert userTagService.findAllTagged(TestEntity, "friend").size() == 3
+        assert userTagService.findTagged(TestEntity, "vip").size() == 1
+        assert userTagService.findTagged(TestEntity, "friend").size() == 3
 
-        assert userTagService.findAllTagged(TestEntity, "none").size() == 0
+        assert userTagService.findTagged(TestEntity, "none").size() == 0
+    }
+
+    void testFindAllByTag() {
+        def m = new TestEntity(name: "Joe Average", age: 40).save(failOnError: true, flush: true)
+        userTagService.tag(m, "friend", "peter")
+        userTagService.tag(m, "friend", "mary")
+
+        m = new TestEntity(name: "Liza Average", age: 38).save(failOnError: true, flush: true)
+        userTagService.tag(m, "friend", "mary")
+
+        m = new TestEntity(name: "Alan Gray", age: 52).save(failOnError: true, flush: true)
+        userTagService.tag(m, "friend", "john")
+        userTagService.tag(m, "vip", "john")
+
+        m = new TestEntity(name: "Linda Svenson", age: 47).save(failOnError: true, flush: true)
+
+        def result = userTagService.findAllTagged("friend", "peter")
+        assert result.size() == 1
+        assert result[0].name == "Joe Average"
+
+        assert userTagService.findAllTagged("vip", "peter").size() == 0
+
+        result = userTagService.findAllTagged("friend", "mary")
+        assert result.size() == 2
+        assert result.find {it.name == "Joe Average"}
+        assert result.find {it.name == "Liza Average"}
+
+        assert userTagService.findAllTagged("vip", "mary").size() == 0
+
+        assert userTagService.findAllTagged("vip").size() == 1
+        assert userTagService.findAllTagged("friend").size() == 3
+
+        assert userTagService.findAllTagged("none").size() == 0
     }
 }
