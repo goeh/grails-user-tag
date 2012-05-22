@@ -1,22 +1,24 @@
+import org.codehaus.groovy.grails.commons.GrailsClassUtils
+
 /*
- * Copyright 2012 Goran Ehrsson.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * under the License.
- */
+* Copyright 2012 Goran Ehrsson.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+* under the License.
+*/
 class UserTagGrailsPlugin {
     // the plugin version
-    def version = "0.3"
+    def version = "0.4"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3.1 > *"
     // the other plugins this plugin depends on
@@ -54,34 +56,50 @@ This plugin let users put private tags on domain instances.
     // Online location of the plugin's browseable source code.
     def scm = [url: "https://github.com/goeh/grails-user-tag"]
 
-    def doWithWebDescriptor = { xml ->
-        // TODO Implement additions to web.xml (optional), this event occurs before
-    }
-
-    def doWithSpring = {
-        // TODO Implement runtime spring config (optional)
-    }
+    def observe = ["domain"]
 
     def doWithDynamicMethods = { ctx ->
-        // TODO Implement registering dynamic methods to classes (optional)
-    }
-
-    def doWithApplicationContext = { applicationContext ->
-        // TODO Implement post initialization spring config (optional)
+        def userTagService = ctx.getBean("userTagService")
+        for (domainClass in application.domainClasses) {
+            def taggableProperty = getTaggableProperty(domainClass)
+            if (taggableProperty) {
+                addDomainMethods(domainClass.clazz.metaClass, userTagService)
+            }
+        }
     }
 
     def onChange = { event ->
-        // TODO Implement code that is executed when any artefact that this plugin is
-        // watching is modified and reloaded. The event contains: event.source,
-        // event.application, event.manager, event.ctx, and event.plugin.
+        def ctx = event.ctx
+        if (event.source && ctx && event.application) {
+            def service = ctx.getBean('userTagService')
+            // enhance domain classes with taggable property
+            if ((event.source instanceof Class) && application.isDomainClass(event.source)) {
+                def domainClass = application.getDomainClass(event.source.name)
+                if (getTaggableProperty(domainClass)) {
+                    addDomainMethods(domainClass.metaClass, service)
+                }
+            }
+        }
     }
 
-    def onConfigChange = { event ->
-        // TODO Implement code that is executed when the project configuration changes.
-        // The event is the same as for 'onChange'.
+    private void addDomainMethods(MetaClass mc, def userTagService) {
+        mc.addUserTag = { String tagName, String username, Long tenant = null ->
+            userTagService.tag(delegate, tagName, username, tenant)
+        }
+        mc.removeUserTag = { String tagName, String username, Long tenant = null ->
+            userTagService.untag(delegate, tagName, username, tenant)
+        }
+        mc.getUserTags = { String username = null, Long tenant = null ->
+            userTagService.getTags(delegate, username, tenant)
+        }
+        mc.isUserTagged = { String tagName, String username, Long tenant = null ->
+            userTagService.isTagged(delegate, tagName, username, tenant)
+        }
     }
 
-    def onShutdown = { event ->
-        // TODO Implement code that is executed when the application shuts down (optional)
+    public static final String TAGGABLE_PROPERTY_NAME = "taggable";
+
+    private getTaggableProperty(domainClass) {
+        GrailsClassUtils.getStaticPropertyValue(domainClass.clazz, TAGGABLE_PROPERTY_NAME)
     }
 }
