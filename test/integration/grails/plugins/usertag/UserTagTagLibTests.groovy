@@ -26,6 +26,22 @@ class UserTagTagLibTests extends GroovyPagesTestCase {
         assert applyTemplate(template, [m: m]) == ''
     }
 
+    void testIsNotTagged() {
+        def m = new TestEntity(name: "Joe Average", age: 40).save(failOnError: true, flush: true)
+
+        userTagService.tag(m, "foo", "peter")
+        userTagService.tag(m, "bar", "mary")
+
+        def template = '<usertag:isNotTagged bean="\${m}" tag="foo" username="peter">add foo</usertag:isNotTagged>'
+        assert applyTemplate(template, [m: m]) == ''
+
+        template = '<usertag:isNotTagged bean="\${m}" tag="bar" username="peter">add bar</usertag:isNotTagged>'
+        assert applyTemplate(template, [m: m]) == 'add bar'
+
+        template = '<usertag:isNotTagged bean="\${m}" tag="bar">add bar</usertag:isNotTagged>'
+        assert applyTemplate(template, [m: m]) == ''
+    }
+
     void testEachTag() {
         def m = new TestEntity(name: "Joe Average", age: 40).save(failOnError: true, flush: true)
 

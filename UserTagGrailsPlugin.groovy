@@ -18,7 +18,7 @@ import org.codehaus.groovy.grails.commons.GrailsClassUtils
 */
 class UserTagGrailsPlugin {
     // the plugin version
-    def version = "0.4"
+    def version = "0.5"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3.1 > *"
     // the other plugins this plugin depends on
@@ -51,7 +51,7 @@ This plugin let users put private tags on domain instances.
     //    def developers = [ [ name: "Joe Bloggs", email: "joe@bloggs.net" ]]
 
     // Location of the plugin's issue tracker.
-    def issueManagement = [system: "GITHUB", url: "https://github.com/goeh/grails-user-tag/issues"]
+    def issueManagement = [system: "github", url: "https://github.com/goeh/grails-user-tag/issues"]
 
     // Online location of the plugin's browseable source code.
     def scm = [url: "https://github.com/goeh/grails-user-tag"]

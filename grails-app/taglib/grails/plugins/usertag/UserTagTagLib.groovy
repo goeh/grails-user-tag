@@ -26,6 +26,19 @@ class UserTagTagLib {
         }
     }
 
+    def isNotTagged = {attrs, body ->
+        if (!attrs.bean) {
+            throwTagError("Tag [isTagged] is missing required attribute [bean]")
+        }
+        if (!attrs.tag) {
+            throwTagError("Tag [isTagged] is missing required attribute [tag]")
+        }
+        def tenant = attrs.tenant ? Long.valueOf(attrs.tenant.toString()) : null
+        if (!userTagService.isTagged(attrs.bean, attrs.tag, attrs.username, tenant)) {
+            out << body()
+        }
+    }
+
     def eachTag = {attrs, body ->
         if (!attrs.bean) {
             throwTagError("Tag [eachTag] is missing required attribute [bean]")
