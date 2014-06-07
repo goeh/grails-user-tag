@@ -47,22 +47,22 @@ class UserTagServiceTests extends GroovyTestCase {
 
         def result = userTagService.getTags(m, "peter")
         assert result.size() == 2
-        assert result.find {it == "test"}
-        assert result.find {it == "foo"}
-        assert !result.find {it == "bar"}
+        assert result.find { it == "test" }
+        assert result.find { it == "foo" }
+        assert !result.find { it == "bar" }
 
         result = userTagService.getTags(m, "john")
         assert result.size() == 1
-        assert result.find {it == "bar"}
+        assert result.find { it == "bar" }
 
         result = userTagService.getTags(m, "mary")
         assert result.size() == 0
 
         result = userTagService.getTags(m)
         assert result.size() == 3
-        assert result.find {it.username == "peter"}
-        assert result.find {it.username == "john"}
-        assert !result.find {it.username == "mary"}
+        assert result.find { it.username == "peter" }
+        assert result.find { it.username == "john" }
+        assert !result.find { it.username == "mary" }
     }
 
     void testFindByTag() {
@@ -87,8 +87,8 @@ class UserTagServiceTests extends GroovyTestCase {
 
         result = userTagService.findTagged(TestEntity, "friend", "mary")
         assert result.size() == 2
-        assert result.find {it.name == "Joe Average"}
-        assert result.find {it.name == "Liza Average"}
+        assert result.find { it.name == "Joe Average" }
+        assert result.find { it.name == "Liza Average" }
 
         assert userTagService.findTagged(TestEntity, "vip", "mary").size() == 0
 
@@ -120,8 +120,8 @@ class UserTagServiceTests extends GroovyTestCase {
 
         result = userTagService.findAllTagged("friend", "mary")
         assert result.size() == 2
-        assert result.find {it.name == "Joe Average"}
-        assert result.find {it.name == "Liza Average"}
+        assert result.find { it.name == "Joe Average" }
+        assert result.find { it.name == "Liza Average" }
 
         assert userTagService.findAllTagged("vip", "mary").size() == 0
 
@@ -129,5 +129,25 @@ class UserTagServiceTests extends GroovyTestCase {
         assert userTagService.findAllTagged("friend").size() == 3
 
         assert userTagService.findAllTagged("none").size() == 0
+    }
+
+    void testDistinct() {
+        def m = new TestEntity(name: "Sven Andersson", age: 56).save(failOnError: true, flush: true)
+        userTagService.tag(m, "friend", "peter")
+
+        m = new TestEntity(name: "Anne Friedman", age: 48).save(failOnError: true, flush: true)
+        userTagService.tag(m, "friend", "mary")
+        userTagService.tag(m, "golf", "mary")
+
+        m = new TestEntity(name: "Burt Goodman", age: 62).save(failOnError: true, flush: true)
+        userTagService.tag(m, "friend", "john")
+        userTagService.tag(m, "golf", "john")
+        userTagService.tag(m, "tennis", "john")
+
+        assert userTagService.distinctTags(TestEntity).size() == 3
+        assert userTagService.distinctTags(TestEntity, "peter").size() == 1
+        assert userTagService.distinctTags(TestEntity, "mary").size() == 2
+        assert userTagService.distinctTags(TestEntity, "john").size() == 3
+        assert userTagService.distinctTags(TestEntity, "joe").size() == 0
     }
 }

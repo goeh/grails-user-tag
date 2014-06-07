@@ -179,6 +179,19 @@ class UserTagService {
         }
     }
 
+    List<String> distinctTags(Class domainClass, String username = null) {
+        UserTag.createCriteria().list() {
+            projections {
+                distinct 'taggedValue'
+            }
+            eq('taggedEntity', domainClass.name)
+            if (username) {
+                eq('username', username)
+            }
+            order 'taggedValue'
+        }
+    }
+
     /**
      * Find a domain class in application context.
      *
