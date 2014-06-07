@@ -14,7 +14,14 @@ It is inspired by the **taggable** plugin and adds support for individual (user)
     assert userTagService.isTagged(person, "friend", "joe")
     assert ! userTagService.isTagged(person, "monkey", "joe")
 
+## Domain methods
+
 The following methods are added to all domain classes that have a static *taggable* property:
+
+    class MyDomain {
+        ...
+        static taggable = true
+    }
 
 ### Att tags to a domain instance
 
