@@ -34,11 +34,11 @@ class UserTagService {
      * @param username (optional) username
      * @param tenant only used in multi-tenant environments
      * @return UserTag instance
-     * @todo really return the UserTag instance!? Why?
      */
     def tag(def domainInstance, String tag, String username, Long tenant = null) {
         domainInstance = GrailsHibernateUtil.unwrapIfProxy(domainInstance)
         new UserTag(tenantId: tenant, taggedEntity: domainInstance.class.name, taggedId: domainInstance.ident(), username: username, taggedValue: tag).save(failOnError: true)
+        return domainInstance
     }
 
     /**
