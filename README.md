@@ -1,7 +1,8 @@
-# Grails User Tag Plugin
+# Grails Individual User Tags Plugin
 
 This plugin lets individual users tag domain instances.
 It is inspired by the **taggable** plugin and adds support for individual (user) tags and multi-tenancy.
+This means that multiple users can tag the same domain instance with same or different tags.
 
 ## UserTagService
 
@@ -39,7 +40,7 @@ The following methods are added to all domain classes that have a static *taggab
 
     List isUserTagged(String tagName, String username, Long tenant = null)
 
-Using the same code examples as for **UserTagService** above but with domain methods looks like this:
+Using the same code examples as for *UserTagService* above but with domain methods looks like this:
 
     def person = Person.get(42)
     person.addUserTag "friend", "joe"
