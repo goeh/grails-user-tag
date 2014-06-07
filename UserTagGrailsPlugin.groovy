@@ -17,43 +17,23 @@ import org.codehaus.groovy.grails.commons.GrailsClassUtils
 * under the License.
 */
 class UserTagGrailsPlugin {
-    // the plugin version
     def version = "0.5"
-    // the version or versions of Grails the plugin is designed for
     def grailsVersion = "1.3.1 > *"
-    // the other plugins this plugin depends on
     def dependsOn = [:]
-    // resources that are excluded from plugin packaging
     def pluginExcludes = [
             "grails-app/domain/test/TestEntity.groovy",
             "grails-app/views/error.gsp"
     ]
-
     def title = "User Tag Plugin" // Headline display name of the plugin
     def author = "Goran Ehrsson"
     def authorEmail = "goran@technipelago.se"
     def description = '''\
 This plugin let users put private tags on domain instances.
 '''
-
-    // URL to the plugin's documentation
     def documentation = "http://grails.org/plugin/user-tag"
-
-    // Extra (optional) plugin metadata
-
-    // License: one of 'APACHE', 'GPL2', 'GPL3'
     def license = "APACHE"
-
-    // Details of company behind the plugin (if there is one)
     def organization = [name: "Technipelago AB", url: "http://www.technipelago.se/"]
-
-    // Any additional developers beyond the author specified above.
-    //    def developers = [ [ name: "Joe Bloggs", email: "joe@bloggs.net" ]]
-
-    // Location of the plugin's issue tracker.
     def issueManagement = [system: "github", url: "https://github.com/goeh/grails-user-tag/issues"]
-
-    // Online location of the plugin's browseable source code.
     def scm = [url: "https://github.com/goeh/grails-user-tag"]
 
     def observe = ["domain"]

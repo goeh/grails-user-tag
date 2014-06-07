@@ -42,7 +42,7 @@ class UserTagService {
     }
 
     /**
-     * Remove  tag form a domain instance.
+     * Remove a tag form a domain instance.
      * @param domainInstance instance to remove tag from
      * @param tag the tag name to remove
      * @param username (optional) username that added the tag

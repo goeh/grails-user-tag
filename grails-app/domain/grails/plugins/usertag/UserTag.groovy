@@ -34,8 +34,10 @@ class UserTag {
 
     static mapping = {
         sort 'taggedValue'
+        cache 'nonstrict-read-write'
     }
 
+    @Override
     String toString() {
         taggedValue
     }
