@@ -31,7 +31,7 @@ The following methods are added to all domain classes that have a static *taggab
         static taggable = true
     }
 
-### Att tags to a domain instance
+### Add tags to a domain instance
 
     Object addUserTag(String tagName, String username, Long tenant = null)
 
