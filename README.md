@@ -48,3 +48,35 @@ Using the same code examples as for *UserTagService* above but with domain metho
     assert person.isTagged("friend")
     assert person.isTagged("friend", "joe")
     assert ! person.isTagged("monkey", "joe")
+
+## GSP Tags
+
+The following GSP tags are provided by the plugin:
+
+### Check if domain instance is tagged
+
+    <usertag:isTagged bean="${person}" tag="friend" username="${currentUser.username}">
+       <p>This person is your friend</p>
+    </usertag:isTagged>
+
+### Check if domain instance is NOT tagged
+
+    <usertag:isNotTagged bean="${person}" tag="friend" username="${currentUser.username}">
+       <g:link action="addtag" params="${[id: person.id, tag: 'friend']}">Add as friend</g:link>
+    </usertag:isNotTagged>
+
+### List all tags on a domain instance
+
+    <ul>
+      <usertag:eachTag bean="${person}" var="tag">
+         <li>${tag.encodeAsHTML()}</li>
+      </usertag:eachTag>
+    </ul>
+
+### List all domain instances tagged with a specific tag
+
+    <ul>
+      <usertag:eachTagged tag="friend" var="friend">
+         <li>${friend.encodeAsHTML()}</li>
+      </usertag:eachTagged>
+    </ul>
