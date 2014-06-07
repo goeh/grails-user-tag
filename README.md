@@ -3,7 +3,7 @@
 This plugin lets individual users tag domain instances.
 It is inspired by the **taggable** plugin and adds support for individual (user) tags and multi-tenancy.
 
-## Example
+## Examples
 
     // Joe is an application user and Person with id 42 is an important friend to Joe.
     def person = Person.get(42)
@@ -16,10 +16,18 @@ It is inspired by the **taggable** plugin and adds support for individual (user)
 
 The following methods are added to all domain classes that have a static *taggable* property:
 
+### Att tags to a domain instance
+
     addUserTag(String tagName, String username, Long tenant = null)
+
+### Remove tags from a domain instance
 
     removeUserTag(String tagName, String username, Long tenant = null)
 
+### List tags on a domain instance
+
     getUserTags(String username = null, Long tenant = null)
+
+### Check if a domain instance is tagged
 
     isUserTagged(String tagName, String username, Long tenant = null)

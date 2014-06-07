@@ -91,7 +91,7 @@ class UserTagService {
             order('username', 'asc')
             order('taggedValue', 'asc')
             cache true
-        }.collect {username ? it.taggedValue : [username: it.username, value: it.taggedValue]}
+        }.collect { username ? it.taggedValue : [username: it.username, value: it.taggedValue] }
     }
 
     /**
@@ -141,7 +141,7 @@ class UserTagService {
             if (tag) {
                 eq('taggedValue', tag)
             }
-        }.collect {domainClass.get(it)}
+        }.collect { domainClass.get(it) }
     }
 
     /**
@@ -173,7 +173,7 @@ class UserTagService {
         }.collect {
             def className = it[0]
             def domainClass = domainCache[className]
-            if(! domainClass) {
+            if (!domainClass) {
                 domainClass = domainCache[className] = getDomainClass(className)
             }
             domainClass.get(it[1])
@@ -187,7 +187,7 @@ class UserTagService {
      */
     protected Class getDomainClass(String name) {
         def applicationContext = grailsApplication.mainContext
-        if(applicationContext.containsBean(name)) {
+        if (applicationContext.containsBean(name)) {
             return applicationContext.getBean(name).getClass()
         }
         grailsApplication.classLoader.loadClass(name)
