@@ -186,12 +186,10 @@ class UserTagService {
      * @param name domain property name i.e. "homeAddress" or class name "com.mycompany.HomeAddress"
      */
     protected Class getDomainClass(String name) {
-        def domain = grailsApplication.domainClasses.find {it.propertyName == name}
-        if (domain) {
-            domain = domain.clazz
-        } else {
-            domain = grailsApplication.classLoader.loadClass(name)
+        def applicationContext = grailsApplication.mainContext
+        if(applicationContext.containsBean(name)) {
+            return applicationContext.getBean(name).getClass()
         }
-        return domain
+        grailsApplication.classLoader.loadClass(name)
     }
 }

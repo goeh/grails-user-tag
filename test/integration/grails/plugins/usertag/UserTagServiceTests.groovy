@@ -112,7 +112,7 @@ class UserTagServiceTests extends GroovyTestCase {
         userTagService.tag(m, "friend", "john")
         userTagService.tag(m, "vip", "john")
 
-        m = new TestEntity(name: "Linda Svenson", age: 47).save(failOnError: true, flush: true)
+        new TestEntity(name: "Linda Svenson", age: 47).save(failOnError: true, flush: true)
 
         def result = userTagService.findAllTagged("friend", "peter")
         assert result.size() == 1
