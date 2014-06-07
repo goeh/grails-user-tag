@@ -90,6 +90,7 @@ class UserTagService {
 
             order('username', 'asc')
             order('taggedValue', 'asc')
+            cache true
         }.collect {username ? it.taggedValue : [username: it.username, value: it.taggedValue]}
     }
 
@@ -113,6 +114,7 @@ class UserTagService {
             eq('taggedEntity', domainInstance.class.name)
             eq('taggedId', domainInstance.ident())
             eq('taggedValue', tag)
+            cache true
         } > 0
     }
 
