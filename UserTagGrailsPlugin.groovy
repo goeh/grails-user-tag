@@ -30,7 +30,7 @@ class UserTagGrailsPlugin {
     def description = '''\
 Let individual users add tags to domain instances.
 '''
-    def documentation = "http://grails.org/plugin/user-tag"
+    def documentation = "https://github.com/goeh/grails-user-tag"
     def license = "APACHE"
     def organization = [name: "Technipelago AB", url: "http://www.technipelago.se/"]
     def issueManagement = [system: "github", url: "https://github.com/goeh/grails-user-tag/issues"]
