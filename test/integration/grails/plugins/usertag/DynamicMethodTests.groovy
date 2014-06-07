@@ -2,8 +2,6 @@ package grails.plugins.usertag
 
 import test.TestEntity
 
-
-
 class DynamicMethodTests extends GroovyTestCase {
 
     void testAddTag() {
