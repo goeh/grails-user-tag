@@ -6,7 +6,7 @@ This means that multiple users can tag the same domain instance with same or dif
 
 ## UserTagService
 
-    // Joe is an application user and Person with id 42 is an important friend to Joe.
+    // Joe is an application user and Person with id 42 is a friend to both Joe and Mary.
     def person = Person.get(42)
     userTagService.tag(person, "friend", "joe")
     userTagService.tag(person, "tennis", "joe")
@@ -16,7 +16,8 @@ This means that multiple users can tag the same domain instance with same or dif
     assert userTagService.isTagged(person, "friend")
     assert userTagService.isTagged(person, "friend", "joe")
     assert userTagService.isTagged(person, "friend", "mary")
-    assert ! userTagService.isTagged(person, "monkey", "joe")
+    assert ! userTagService.isTagged(person, "golf", "joe")
+    assert ! userTagService.isTagged(person, "tennis", "mary")
     assert userTagService.distinctTags(Person, "joe").size() == 2
     assert userTagService.distinctTags(Person, "joe") == ["friend", "tennis"]
     assert userTagService.distinctTags(Person, "mary") == ["friend", "golf"]
