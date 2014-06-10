@@ -51,11 +51,12 @@ The following methods are added to all domain classes that have a static *taggab
 Using the same code examples as for *UserTagService* above but with domain methods looks like this:
 
     def person = Person.get(42)
-    person.addUserTag("friend", "joe").addUserTag("vip", "joe")
+    person.addUserTag("friend", "joe")
+    person.addUserTag("tennis", "joe")
     assert person.getUserTags("joe").size() == 2
-    assert person.isTagged("friend")
-    assert person.isTagged("friend", "joe")
-    assert ! person.isTagged("monkey", "joe")
+    assert person.isUserTagged("friend")
+    assert person.isUserTagged("friend", "joe")
+    assert ! person.isUserTagged("golf", "joe")
 
 ## GSP Tags
 
