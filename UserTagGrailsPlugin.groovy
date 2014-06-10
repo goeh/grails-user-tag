@@ -28,7 +28,9 @@ class UserTagGrailsPlugin {
     def author = "Goran Ehrsson"
     def authorEmail = "goran@technipelago.se"
     def description = '''\
-Let individual users add tags to domain instances.
+This plugin lets individual users tag domain instances.
+It is inspired by the taggable plugin and adds support for individual (user) tags and multi-tenancy.
+This means that multiple users can tag the same domain instance with same or different tags.
 '''
     def documentation = "https://github.com/goeh/grails-user-tag"
     def license = "APACHE"
