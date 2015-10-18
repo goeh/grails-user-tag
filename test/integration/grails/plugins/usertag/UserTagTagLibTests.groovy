@@ -62,7 +62,7 @@ class UserTagTagLibTests extends GroovyPagesTestCase {
 
         def template = '<usertag:eachTagged tag="parent">\${it}+</usertag:eachTagged>'
         def result = applyTemplate(template)
-        assert result == 'Joe Average+Liza Average+' || result == '+Liza Average+Joe Average'
+        assert result == 'Joe Average+Liza Average+' || result == 'Liza Average+Joe Average+'
 
         template = '<usertag:eachTagged tag="child" username="joe">\${it}+</usertag:eachTagged>'
         assert applyTemplate(template) == 'Josh Average+'
@@ -73,6 +73,22 @@ class UserTagTagLibTests extends GroovyPagesTestCase {
         template = '<usertag:eachTagged type="' + TestEntity.name + '" tag="child">\${it}+</usertag:eachTagged>'
         result = applyTemplate(template)
         assert result == 'Josh Average+Mary Average+' || result == 'Mary Average+Josh Average+'
+    }
+
+    void testRemovedTaggedEntities() {
+        def entity1 = new TestEntity(name: "AAA", age: 40).save(failOnError: true, flush: true)
+        def entity2 = new TestEntity(name: "BBB", age: 37).save(failOnError: true, flush: true)
+
+        userTagService.tag(entity1, "foo", "test")
+        userTagService.tag(entity2, "foo", "test")
+
+        def template = '<usertag:eachTagged tag="foo" username="test">\${it}+</usertag:eachTagged>'
+        def result = applyTemplate(template)
+        assert result == 'AAA+BBB+' || result == 'BBB+AAA+'
+
+        entity2.delete(flush: true) // Delete BBB
+
+        assert applyTemplate(template) == 'AAA+'
     }
 
 }

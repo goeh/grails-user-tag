@@ -140,7 +140,7 @@ class UserTagService {
             if (tag) {
                 eq('taggedValue', tag)
             }
-        }.collect { domainClass.get(it) }
+        }.collect { domainClass.get(it) }.findAll{it != null}
     }
 
     /**
@@ -176,7 +176,7 @@ class UserTagService {
                 domainClass = domainCache[className] = getDomainClass(className)
             }
             domainClass.get(it[1])
-        }
+        }.findAll{it != null}
     }
 
     List<String> distinctTags(Class domainClass, String username = null) {
